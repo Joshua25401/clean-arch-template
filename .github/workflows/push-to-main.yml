@@ -26,8 +26,9 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          if git merge --ff-only develop; then
-            git push origin main
+          if git rebase develop; then
+            git checkout main
+            git push -f
           else
             echo "Failed to merge develop into main. Please resolve merge conflicts."
             exit 1
