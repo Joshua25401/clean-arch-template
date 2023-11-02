@@ -27,9 +27,9 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git checkout main
+          git push --set-upstream origin main
           if git rebase develop; then
-            git checkout main
-            git push -u origin main
+            git push -f
           else
             echo "Failed to merge develop into main. Please resolve merge conflicts."
             exit 1
