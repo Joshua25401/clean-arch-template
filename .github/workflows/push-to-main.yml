@@ -29,7 +29,7 @@ jobs:
           git checkout develop
           git pull origin develop
           git checkout main
-          if git rebase develop; then
+          if git merge --allow-unrelated-histories develop; then
             git push -f
           else
             echo "Failed to merge develop into main. Please resolve merge conflicts."
