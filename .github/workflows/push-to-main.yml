@@ -28,7 +28,7 @@ jobs:
           git config user.email "actions@github.com"
           git checkout main
           git push --set-upstream origin main
-          if git rebase develop; then
+          if git merge --ff-only develop; then
             git push -f
           else
             echo "Failed to merge develop into main. Please resolve merge conflicts."
