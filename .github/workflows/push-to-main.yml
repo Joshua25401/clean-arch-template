@@ -1,0 +1,36 @@
+name: Push to Main on Develop Branch Merge
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  push-to-main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create or Checkout Main Branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git fetch origin main:main || git checkout -b main origin/main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to Main on Merge
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'Merge pull request')
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          if git merge --ff-only develop; then
+            git push origin main
+          else
+            echo "Failed to merge develop into main. Please resolve merge conflicts."
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
