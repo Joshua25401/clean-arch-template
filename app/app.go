@@ -1,6 +1,8 @@
 package app
 
 import (
+	delivery "clean-arch-template/delivery/http"
+	"clean-arch-template/service"
 	"context"
 	"fmt"
 	"log"
@@ -9,9 +11,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 )
 
 type App struct {
@@ -22,27 +21,9 @@ type App struct {
 }
 
 func New() *App {
-	router := gin.Default()
-
-	// Setup middleware
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"*"}
-	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	router.Use(cors.New(corsConfig))
-	router.Use()
-
-	// Setup gin mode
-	gin.SetMode(gin.DebugMode) // Change to relase
-
 	// Enable golang to log filename
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	// Setup router / handler below
-	router.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, map[string]any{
-			"message": "Welcome to API",
-		})
-	})
 	// Setup any dependency for other layer below!
 
 	// Setup anonymous function to clean up dependecy
@@ -50,6 +31,13 @@ func New() *App {
 		// Close ur http dependency here
 		return nil
 	}
+
+	service := service.NewService()
+
+	router := delivery.NewDelivery(delivery.HTTPDependencies{
+		Service: service,
+	})
+
 	// Return the app object
 	return &App{
 		router: router,
@@ -81,7 +69,7 @@ func (app App) Run() {
 		3. Terminate Signal
 		4. Quit Signal
 	*/
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	signal.Notify(quit, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	// Wait the signal come to our quit channel
 	<-quit
