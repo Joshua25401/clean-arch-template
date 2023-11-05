@@ -69,6 +69,8 @@ func (app App) Run() {
 		}
 	}()
 
+	fmt.Println("Running server on port :8080")
+
 	// Make a quit channel
 	quit := make(chan os.Signal, 1)
 	/**
