@@ -18,7 +18,7 @@ jobs:
       - name: Build and push Docker image
         env:
           DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
-          DOCKER_IMAGE_NAME: template
+          DOCKER_IMAGE_NAME: ${{ vars.IMAGE_NAME }}
         run: |
           docker buildx create --use
           docker login -u "Joshua Pangaribuan" -p $DOCKER_PAT ghcr.io
