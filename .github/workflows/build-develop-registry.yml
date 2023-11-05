@@ -25,5 +25,5 @@ jobs:
           DOCKER_IMAGE_NAME: template
         run: |
           docker buildx create --use
-          docker login -u username -p $DOCKER_PAT docker.pkg.github.com
+          docker login -u "Joshua Pangaribuan" -p $DOCKER_PAT docker.pkg.github.com
           docker buildx build -t docker.pkg.github.com/${{ github.repository }}/${{ env.DOCKER_IMAGE_NAME }}:${{ steps.branch_name.outputs.branch }} --push .
