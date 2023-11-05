@@ -1,6 +1,7 @@
 package delivery
 
 import (
+	pkg "clean-arch-template/pkg/logger"
 	"clean-arch-template/service"
 	"net/http"
 
@@ -11,11 +12,15 @@ import (
 type (
 	HTTPDependencies struct {
 		Service service.Service
+		Logger  pkg.Logger
 	}
 
 	delivery struct {
 		// Depend to service layer
 		service service.Service
+
+		// Depend on logger
+		logger pkg.Logger
 		// Depend to authentication layer
 	}
 )
@@ -23,6 +28,7 @@ type (
 func NewDelivery(dep HTTPDependencies) http.Handler {
 	delivery := &delivery{
 		service: dep.Service,
+		logger:  dep.Logger,
 	}
 
 	router := gin.New()

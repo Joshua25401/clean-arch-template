@@ -2,6 +2,7 @@ package app
 
 import (
 	delivery "clean-arch-template/delivery/http"
+	pkg "clean-arch-template/pkg/logger"
 	"clean-arch-template/service"
 	"context"
 	"fmt"
@@ -26,17 +27,18 @@ func New() *App {
 
 	// Setup any dependency for other layer below!
 
+	service := service.NewService()
+
+	router := delivery.NewDelivery(delivery.HTTPDependencies{
+		Service: service,
+		Logger:  pkg.NewZapLogger(),
+	})
+
 	// Setup anonymous function to clean up dependecy
 	cleanup := func() error {
 		// Close ur http dependency here
 		return nil
 	}
-
-	service := service.NewService()
-
-	router := delivery.NewDelivery(delivery.HTTPDependencies{
-		Service: service,
-	})
 
 	// Return the app object
 	return &App{
