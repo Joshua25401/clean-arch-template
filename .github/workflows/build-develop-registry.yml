@@ -1,0 +1,29 @@
+name: Build Develop Registry
+# Event triggers
+on:
+  push:
+    branches:
+      - "develop"
+jobs:
+  build:
+    runs-on: ubuntu:latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Get branch name
+        id: branch_name
+        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+
+      - name: Build and push Docker image
+        env:
+          DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+          DOCKER_IMAGE_NAME: template
+        run: |
+          docker buildx create --use
+          docker login -u username -p $DOCKER_PAT docker.pkg.github.com
+          docker buildx build -t docker.pkg.github.com/${{ github.repository }}/${{ env.DOCKER_IMAGE_NAME }}:${{ steps.branch_name.outputs.branch }} --push .
