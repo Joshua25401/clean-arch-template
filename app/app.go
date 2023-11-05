@@ -22,16 +22,17 @@ type App struct {
 }
 
 func New() *App {
-	// Enable golang to log filename
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	// Setup logger
+	logger := pkg.NewZapLogger()
 
 	// Setup any dependency for other layer below!
-
-	service := service.NewService()
+	service := service.NewService(service.ServiceDependencies{
+		Logger: logger,
+	})
 
 	router := delivery.NewDelivery(delivery.HTTPDependencies{
 		Service: service,
-		Logger:  pkg.NewZapLogger(),
+		Logger:  logger,
 	})
 
 	// Setup anonymous function to clean up dependecy
