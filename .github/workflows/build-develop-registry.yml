@@ -26,4 +26,4 @@ jobs:
         run: |
           docker buildx create --use
           docker login -u "Joshua Pangaribuan" -p $DOCKER_PAT docker.pkg.github.com
-          docker buildx build -t docker.pkg.github.com//joshua25401/clean-arch-template/${{ env.DOCKER_IMAGE_NAME }}:${{ steps.branch_name.outputs.branch }} --push .
+          docker buildx build -t docker.pkg.github.com/joshua25401/clean-arch-template/${{ env.DOCKER_IMAGE_NAME }}:${{ steps.branch_name.outputs.branch }} --push .
