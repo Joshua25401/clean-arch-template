@@ -12,6 +12,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/juju/ratelimit"
 )
 
 type App struct {
@@ -22,6 +24,9 @@ type App struct {
 }
 
 func New() *App {
+	// Setup rate limit bucket
+	ipLimiterBucket := make(map[string]*ratelimit.Bucket)
+
 	// Setup logger
 	logger := pkg.NewZapLogger()
 
@@ -31,8 +36,9 @@ func New() *App {
 	})
 
 	router := delivery.NewDelivery(delivery.HTTPDependencies{
-		Service: service,
-		Logger:  logger,
+		Service:  service,
+		Logger:   logger,
+		IpBucket: ipLimiterBucket,
 	})
 
 	// Setup anonymous function to clean up dependecy
