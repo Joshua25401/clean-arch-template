@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,5 +18,14 @@ func (d *delivery) SampleGinHandler(ginCtx *gin.Context) {
 	}
 
 	d.logger.Info(context.Background(), "SampleGinHandler Info", zap.Any("message", "Success"))
-	ginCtx.JSON(http.StatusOK, data)
+	responseData(ginCtx, http.StatusOK, httpResponse{
+		Message: "Success",
+		Data:    data,
+	})
+}
+
+func (d *delivery) SampleError(ginCtx *gin.Context) {
+	err := errors.New("just a simple error for testing purposes")
+	d.logger.Error(ginCtx.Request.Context(), "SampleGinError", err)
+	responseError(ginCtx, err)
 }

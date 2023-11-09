@@ -27,6 +27,7 @@ func NewZapLogger() Logger {
 	loggerIns.Level = zap.NewAtomicLevelAt(zapcore.InfoLevel)
 	loggerIns.EncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	loggerIns.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	loggerIns.DisableStacktrace = true
 
 	logger, err := loggerIns.Build(zap.AddCaller(), zap.AddCallerSkip(1))
 	if err != nil {

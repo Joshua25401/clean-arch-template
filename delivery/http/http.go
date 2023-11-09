@@ -48,6 +48,7 @@ func NewDelivery(dep HTTPDependencies) http.Handler {
 
 	// Register handler here
 	router.GET("/", delivery.SampleGinHandler)
+	router.GET("/sample-error", delivery.SampleError)
 
 	return router
 }
